@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Clickbola (treinador de cliques rapidos)</title>
+    <link rel="stylesheet" href="game.css">
+</head>
+
+<body>
+    <header>
+        <a>
+            <figure>
+                <img src="Images/icon.png" alt="🔴🫵" width="250" height="auto">
+            </figure>
+        </a>
+    </header>
+    <main>
+        <div class="starterbutton">
+            <h4>‎ ‎ Pontos: ${pontos}</h4>
+            <h4>‎ ‎ Recorde: ${recorde}</h4>
+        </div>
+        <figure class="game">
+            <canvas id="gamecanvas" width="800" height="650"></canvas>
+        </figure>
+        <a href="game.html"><button id="restart">Reniciar</button></a>
+    </main>
+</body>
+<script href="game.js"></script>
+
+</html>
