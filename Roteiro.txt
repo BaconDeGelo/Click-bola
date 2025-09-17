@@ -1,0 +1,20 @@
+■ Roteiro de Pensamento para Criar o Jogo no
+Canvas
+
+ o 1 | Configurações iniciais e variáveis: Defina constantes (tempo, tamanho da bola, cores) e crie
+variáveis para pontos, erros, tempo, lista de bolas e estado do jogo
+
+ o  2 | Funções de desenho no canvas: Uma função para desenhar uma bola e outra para limpar a
+tela.
+
+ o  3 | Controle da interface (HTML): Atualize pontuação, tempo e erros visíveis para o jogador.
+
+ o  4 | Lógica das bolas: Gerar bolas novas, guardar em um array, remover quando clicadas ou
+quando sumirem.
+ 
+ o  5 | Loop do jogo (animação): Limpar tela, desenhar bolas, remover expiradas — repetindo várias
+vezes por segundo.
+
+ o  6 | Tempo do jogo: Criar uma contagem regressiva e encerrar ao chegar a zero.
+
+ o  7 | Fim de jogo: Parar tudo e mostrar a mensagem final.

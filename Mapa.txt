@@ -7,3 +7,8 @@ Quando o jogador entra no game.html ele vai ver bolas aparecendo na tela precisa
 when ball clicked (quando a bola e clicada) set var points + 1 (definir a variavel points +1)
 Quando mais de 5 bolas desapareceu sem ser clicadas. o jogador perde. definindo o recorde dele
 when 5 ball no click (quando 5 bolas não foi clicadas) trigger gameover and show retrybtt (ativar o "Game Over" e mostrar o botão retrybtt)
+
+Criar variavel de pontos de erros
+Criar variavel de acertos
+Criar variavel de recorde
+Criar variavel de tempo
