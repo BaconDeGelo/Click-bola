@@ -44,3 +44,11 @@ button {
 canvas {
     background-color: blueviolet;
 }
+
+.winmsg {
+    background-image: url(Images/bgwonmsg.png);
+    border-radius: 15px;
+    margin-top: 128px;
+    align-items: left;
+    text-align: center;
+}
