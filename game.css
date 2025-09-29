@@ -7,11 +7,11 @@ header {
 }
 
 body {
-    background-color: rgb(136, 62, 206);
+    background-image: url(Images/bggame.png);
 }
 
 .starterbutton {
-    background-color: rgba(0, 0, 0, 0.48);
+    background-image: url(Images/bgwonmsg.png);
     border-radius: 15px;
     margin-top: 128px;
     align-items: left;

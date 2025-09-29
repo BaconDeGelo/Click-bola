@@ -44,9 +44,20 @@ const balltimer = { // não. não vai demorar 12 anos pra a bola desaparecer. e 
     5: 2000
 };
 
+/* VARIAVEIS DO ESTATO DO JOGO E OUTRAS COISAS!. bola de bola */
+
+let gameRunning = false; // MAIS UM JOGO!!! (se o jogo estiver rodando ela e true e se não estiver rodando e false. bola de camera.)
+let score = 0;
+let missedClicks = 0;
+let gameTimer = GAME_DURATION;
+let gameInterval;
+let ballGenerationIntervalId;
+let activeBalls = [];
+let animationFrameId;
+
 /* CORES UAU AAAAAAAAAA */
 
-const color = [
+const color = [ // /\ olhe. (isso pega as cores das bolas. bola de feijoada)
     'cyan',
     'orange',
     'red',
@@ -62,6 +73,13 @@ function drawCircle(ctx, x, y, size, color) {
     ctx.arc(x, y, size / 2, 0, Math.PI * 2);
     ctx.closePath();
     ctx.fill();
+}
+
+function endGame() {
+    clearInterval(timerInterval);
+    winSound.currentTime = 0;
+    winSound.play();
+    youwon.classList('show');
 }
 
 /* LISTA DE ALGUMA COISA NUM SEI */
