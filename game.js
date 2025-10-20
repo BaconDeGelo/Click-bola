@@ -6,60 +6,61 @@ const ctx = canvas.getContext('2d');
 
 /* VARIAVEIS */
 
-const points = document.getElementById('points'); // pontu :D (... ele pega o texto que e sobre os pontos... e coloca nele... NOOOOOSSSSSAAAAA TITIA QUE MANEIRO)
-const record = document.getElementById('record'); // recordi :D (Coloca o recorde no texto do html. ta certo isso?)
-const time = document.getElementById('timer'); // Pega o documento (por id🔥) do timeer para mostrar o timer (TIMER TIMER AAAAAA)
-const errors = document.getElementById('error'); // Pega o documento (por id uau) do erro para ser exibido (skibidi)
-const timertoend = 60; // Tempo para o jogo terminar
-const errorsmax = 3; // Maximo de erros
-const maxballs = 8; // Maximo de bolas na tela
-const initialballs = 0; // Quantas bolas aparece de inicio
-const GAME_DURATION = 60; // falta 60 segundos pro jogo acaba. tempo passa viu?
-const MAX_MISSED_CLICKS = 10; // mamixo de bolad clicsdoas (escrevi isso sem olhar no teclado)
-const INITIAL_BALL_COUNT = 3; // bolas inicias (TREIS DOIS UM VAOOOOOOOOOOOOOOOOOOOOODSFAHV HDUFVJFVHFDVJKFDGVJFDVDFCHJVFFDHJFGDHJFEHFDFHJDFFKJFDHFDHFFDHGRYGUYDFJHGFDHJVCJBCHDYUJGJHVBVDNVJKFDVFJGHBGJFDHGJKRDHGUIERFJGFDV,JHBVIUDYGERGFDJBGHJRFGHREGHYOEJFDNBGFREGTREFHNKJIMVGLFNBHRG\GHFRDÇHGYUZM,.GHDFFJKBNCVBNMJDVJD. acabei)
-
+//const points = document.getElementById('points'); // pontu :D (... ele pega o texto que e sobre os pontos... e coloca nele... NOOOOOSSSSSAAAAA TITIA QUE MANEIRO)
+//const record = document.getElementById('record'); // recordi :D (Coloca o recorde no texto do html. ta certo isso?)
+//const time = document.getElementById('timer'); // Pega o documento (por id🔥) do timeer para mostrar o timer (TIMER TIMER AAAAAA)
+//const errors = document.getElementById('error'); // Pega o documento (por id uau) do erro para ser exibido (skibidi)
+//const timertoend = 60; // Tempo para o jogo terminar
+//const errorsmax = 3; // Maximo de erros
+//const maxballs = 8; // Maximo de bolas na tela
+//const initialballs = 0; // Quantas bolas aparece de inicio
+//const GAME_DURATION = 60; // falta 60 segundos pro jogo acaba. tempo passa viu?
+//const MAX_MISSED_CLICKS = 10; // mamixo de bolad clicsdoas (escrevi isso sem olhar no teclado)
+//const INITIAL_BALL_COUNT = 3; // bolas inicias (TREIS DOIS UM VAOOOOOOOOOOOOOOOOOOOOODSFAHV HDUFVJFVHFDVJKFDGVJFDVDFCHJVFFDHJFGDHJFEHFDFHJDFFKJFDHFDHFFDHGRYGUYDFJHGFDHJVCJBCHDYUJGJHVBVDNVJKFDVFJGHBGJFDHGJKRDHGUIERFJGFDV,JHBVIUDYGERGFDJBGHJRFGHREGHYOEJFDNBGFREGTREFHNKJIMVGLFNBHRG\GHFRDÇHGYUZM,.GHDFFJKBNCVBNMJDVJD. acabei)
+const BALL_RADIUS = 25;
 
 /* VARIAVEIS DE BOTÕES */
 
-const resetgame = document.getElementById('restart'); // ele renicia o jogo. legal ne?
-const beatmyrecord = document.getElementsByClassName('retry'); // RETENTEEE! (ele renicia o jogo. igual o restar- acho que o retry e a mesma coisa que o restart. 🔥)
+//const resetgame = document.getElementById('restart'); // ele renicia o jogo. legal ne?
+//const beatmyrecord = document.getElementsByClassName('retry'); // RETENTEEE! (ele renicia o jogo. igual o restar- acho que o retry e a mesma coisa que o restart. 🔥)
 
 
 /* VARIAVEIS DE MENSAGENS */
 
-const youwon = document.getElementById('youwonmsg'); // mensagem de "VOCE VENCEU PARABENS!!!!!!11!!!!!!111! AAAAAAAA QUE LEGALLLLLL". empougei
+//const youwon = document.getElementById('youwonmsg'); // mensagem de "VOCE VENCEU PARABENS!!!!!!11!!!!!!111! AAAAAAAA QUE LEGALLLLLL". empougei
 
 /* VARIAVEIS DAS BOLAS */
 
 const ballsval = [1, 2, 3, 4, 5]; // quantas bolas tem no jogo. acho que isso iria ser normal? jamais AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-const ballpoints = { // onde coloco isso? ah isso pega quantos pontos cada bola vai ter. bola de queijo
+/*const ballpoints = { // onde coloco isso? ah isso pega quantos pontos cada bola vai ter. bola de queijo
     1: 3,
     2: 5,
     3: 10,
     4: 12,
     5: 25
-};
+}; */
 
-const balltimer = { // não. não vai demorar 12 anos pra a bola desaparecer. e que 1000 e 1 segundo em codigos. e, mas isso pega quanto tempo demora pra bola sumir
+/*const balltimer = { // não. não vai demorar 12 anos pra a bola desaparecer. e que 1000 e 1 segundo em codigos. e, mas isso pega quanto tempo demora pra bola sumir
     1: 12000,
     2: 10000,
     3: 3000,
     4: 5000,
     5: 2000
-};
+}; */
 
 /* VARIAVEIS DO ESTATO DO JOGO E OUTRAS COISAS!. bola de bola */
 
-let gameRunning = false; // MAIS UM JOGO!!! (se o jogo estiver rodando ela e true e se não estiver rodando e false. bola de camera.)
-let score = 0; // hmmmm quantos pontos eu tenho... acho que uns 83334392483974782349327489374327928. (quantos pontos o jogador tem. bola de Visual Studio Code 2.0 launch)
-let missedClicks = 0; // erro 100 voce errou muitas vezes. babau
-let gameTimer = GAME_DURATION; // 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 e vai indo (quanto tempo passou para o jogo acaba. bola de 🥚)
-let gameInterval; // intervalo 😎👍
-let ballGenerationIntervalId; // id da geração. na verdade eu nem sei oque isso faz
-let activeBalls = []; // bola ativa 💡
-let animationFrameId; // animação ou alguma coisa do tipo. num sei.
-let highScore = 0; // seu recordi! MUNDIAL! AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-let lastScores = []; // erui
+//let gameRunning = false; // MAIS UM JOGO!!! (se o jogo estiver rodando ela e true e se não estiver rodando e false. bola de camera.)
+//let score = 0; // hmmmm quantos pontos eu tenho... acho que uns 83334392483974782349327489374327928. (quantos pontos o jogador tem. bola de Visual Studio Code 2.0 launch)
+//let missedClicks = 0; // erro 100 voce errou muitas vezes. babau
+//let gameTimer = GAME_DURATION; // 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 e vai indo (quanto tempo passou para o jogo acaba. bola de 🥚)
+//let gameInterval; // intervalo 😎👍
+//let ballGenerationIntervalId; // id da geração. na verdade eu nem sei oque isso faz
+//let activeBalls = []; // bola ativa 💡
+//let animationFrameId; // animação ou alguma coisa do tipo. num sei.
+//let highScore = 0; // seu recordi! MUNDIAL! AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+//let lastScores = []; // erui
+
 // acabo 💡💡💡👍😎👍👍👍😎💡🔁🎮⏬🔥🔥⚠️⚠️🔥🖥️🩸🩸🔨
 
 /* CORES UAU AAAAAAAAAA */
