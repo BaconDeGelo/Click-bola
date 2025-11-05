@@ -3,11 +3,25 @@ const ctx = canvas.getContext('2d');
 
 const BALL_RADIUS = 25;
 const INITIAL_BALL_COUNT = 3;
-const BALL_VALUES = [1, 2, 3, 4, 5];
+const MAX_ACTIVE_BALLS = 5;
+const BALL_VALUES = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 const BALL_COLORS = ['red', 'blue', 'green', 'purple', 'orange', 'pink', 'cyan', 'gold', 'brown', 'lime', 'teal'];
+
+const VALUE_TO_LIFESPAN_MS = {
+    1: 4000,
+    2: 3500,
+    3: 3000,
+    4: 2500,
+    5: 2000,
+    6: 1500,
+    7: 1000,
+    8: 900,
+    9: 500
+}
 
 let activeBalls = [];
 let score = 0;
+let gameRunning = true;
 
 function getRandomItem(arr) {
     const randomIndex = Math.floor(Math.random() * arr.length);
@@ -31,10 +45,39 @@ function drawBalls(ball) {
     ctx.fillText(ball.value.toString(), ball.x, ball.y);
 }
 
-
-
 function clearCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function gameLoop() {
+    if (!gameRunning) return;
+
+    clearCanvas();
+
+    const currentTime = Date.now();
+    const nextActiveBalls = [];
+
+    for (let i = 0; i < activeBalls.length; i++) {
+        const ball = activeBalls[i];
+
+        if (currentTime - ball.spawnTime > ball.lifespan) {
+            console.log(`SOLDADO! *piu piu piu* TEMOS UM SOLDADO CAIDO DE ${ball.value} MORREU! PRESISAMOS DE UM MEDICO *pou pou pou*`);
+            generateBall();
+        } else {
+            drawBalls(ball);
+            nextActiveBalls.push(ball);
+        }
+    }
+
+    activeBalls = nextActiveBalls;
+
+    ctx.fillStyle = 'black';
+    ctx.font = '20px Arial';
+    ctx.textAlign = 'left';
+    ctx.fillText(`pontus: ${score}`, 10, 30);
+    ctx.fillText(`bolas ativas🤤: ${activeBalls.length}`, 10, 55);
+
+    requestAnimationFrame(gameLoop);
 }
 
 function generateBall() {
@@ -51,12 +94,13 @@ function generateBall() {
         color: randomColor,
         value: randomValue,
         points: randomValue * 10,
-        
+        spawnTime: Date.now(),
+        lifespan: VALUE_TO_LIFESPAN_MS[randomValue]
     };
 
     activeBalls.push(newBall);
-    console.log(`*bssssss* atenção soldado uma nova bola nasceu com o valou *bsss* ${randomValue} e ela vai viver por *bsss* o lif *bsss* time de ${newBall.lifespan} de milisegundos. CAMBIO DESLIGO *beep*`)
 }
+
 
 function drawAllBalls() {
     clearCanvas();
@@ -100,6 +144,7 @@ for (let i = 0; i < INITIAL_BALL_COUNT; i++) {
     generateBall();
 }
 
-drawAllBalls();
+gameLoop();
 
-console.log("pronto o game3.js ta funcionando bele?")
+console.log("OS SCIRP FUNCIPNOUY YAYAYAYAYAY QAGORA TUDO FUNCIONA AGORA AHAAAA");
+console.log("dica: isso e uma dica muito util")
