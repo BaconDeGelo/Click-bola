@@ -1,12 +1,22 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
+const scoreSpan = document.getElementById('score');
+const timerSpan = document.getElementById('timer');
+const missedClicksSpan = document.getElementById('missedClicks');
+const restartButton = document.getElementById('restart');
+const messageDiv = document.getElementById('winmsg')
+
+
 const BALL_RADIUS = 25;
 const INITIAL_BALL_COUNT = 3;
 const MAX_ACTIVE_BALLS = 5;
+const MAX_MISSED_CLICKS = 3;
+const GAME_DURATION = 60;
 const BALL_VALUES = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 const BALL_COLORS = ['red', 'blue', 'green', 'purple', 'orange', 'pink', 'cyan', 'gold', 'brown', 'lime', 'teal'];
 
+const VALUE_TO_POINTS = { 1: 10, 2: 20, 3: 30, 4: 40, 5: 50, 6: 60, 7: 70, 8: 80, 9: 90};
 const VALUE_TO_LIFESPAN_MS = {
     1: 4000,
     2: 3500,
@@ -17,11 +27,19 @@ const VALUE_TO_LIFESPAN_MS = {
     7: 1000,
     8: 900,
     9: 500
-}
+};
+
+const clickSound = new Audio('Sounds/click.mp3');
+const missSound = new Audio('Sounds/miss.mp3');
+const endSound = new Audio('Sounds/end.mp3');
 
 let activeBalls = [];
 let score = 0;
+let missedClicks = 0;
+let gameTimer = GAME_DURATION;
+let gameInterval;
 let gameRunning = true;
+let animationFrameId;
 
 function getRandomItem(arr) {
     const randomIndex = Math.floor(Math.random() * arr.length);
@@ -49,6 +67,12 @@ function clearCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
+function updateGameDisplay() {
+    scoreSpan.textContent = score;
+    timerSpan.textContent = gameTimer;
+    missedClicksSpan.textContent = `${missedClicks} / ${MAX_MISSED_CLICKS}`;
+}
+
 function updatePointsDisplay() {
     const pointsElement = document.getElementById('points');
     if (pointsElement) {
@@ -68,8 +92,6 @@ function gameLoop() {
         const ball = activeBalls[i];
 
         if (currentTime - ball.spawnTime > ball.lifespan) {
-            console.log(`SOLDADO! *piu piu piu* TEMOS UM SOLDADO CAIDO DE ${ball.value} MORREU! PRESISAMOS DE UM MEDICO *pou pou pou*`);
-            generateBall();
         } else {
             drawBalls(ball);
             nextActiveBalls.push(ball);
@@ -87,6 +109,8 @@ function gameLoop() {
 }
 
 function generateBall() {
+    if (!gameRunning || activeBalls.length >= MAX_ACTIVE_BALLS) return;
+
     const randomValue = getRandomItem(BALL_VALUES);
     const randomColor = getRandomItem(BALL_COLORS);
     const x = getRandomInt(BALL_RADIUS, canvas.width - BALL_RADIUS);
@@ -99,14 +123,37 @@ function generateBall() {
         radius: BALL_RADIUS,
         color: randomColor,
         value: randomValue,
-        points: randomValue * 10,
+        points: VALUE_TO_POINTS[randomValue],
         spawnTime: Date.now(),
         lifespan: VALUE_TO_LIFESPAN_MS[randomValue]
     };
 
+    console.log(`nova bola: ${JSON.stringify(newBall)}`);
+
     activeBalls.push(newBall);
 }
 
+function gameLoop() {
+    if (!gameRunning) return;
+
+    clearCanvas();
+
+    const currentTime = Date.now();
+    const nextActiveBalls = [];
+
+    for (let i = 0; i < activeBalls.length; i++) {
+        const ball = activeBalls[i];
+
+        if (currentTime - ball.spawnTime > ball.lifespan) {
+            generateBall();
+        } else {
+            drawAllBalls(ball);
+            nextActiveBalls.push(ball);
+        }
+    }
+    activeBalls = nextActiveBalls;
+    animationFrameId = requestAnimationFrame(gameLoop);
+}
 
 function drawAllBalls() {
     clearCanvas();
@@ -121,10 +168,18 @@ function drawAllBalls() {
     ctx.fillText(`Pontos: ${score}`, 10, 30);
 }
 
-function handleClick(event) {
+function handleClick(event) {   
+    if (!gameRunning) return;
+
     const rect = canvas.getBoundingClientRect();
     const clickX = event.clientX - rect.left;
     const clickY = event.clientY - rect.top;
+
+    let ballClicked = false;
+
+    clickSound.currentTime = 0;
+    clickSound.play();
+
     for (let i = 0; i < activeBalls.length; i++) {
         
         const ball = activeBalls[i];
@@ -134,8 +189,6 @@ function handleClick(event) {
 
         if (distance <= ball.radius) {
             score += ball.points;
-            console.log(`CONGRATILAITIONS!!!!2111111!!!111!! VC GANHOU ${ball.points}!!!!!!! VC TEM ${score} DE PONTOS!!!11!!!1!😀😀😀😄😃😃😄😁🤣😃😃😃😄🙂🙂🙂😊😊😊`);
-
             activeBalls.splice(i, 1);
             generateBall();
             updatePointsDisplay();
@@ -143,16 +196,70 @@ function handleClick(event) {
             break;
         }
     }
+
+    if (!ballClicked) {
+        missedClicks++;
+        updateGameDisplay();
+        console.log(`tu errou .,. (${missedClicks} ai se tu ganhar ${MAX_MISSED_CLICKS} tu perde.)`);
+    }
+}
+
+function startTimer() {
+    gameInterval = setInterval(() => {
+        gameTimer--;
+        updateGameDisplay();
+
+        if (gameTimer <= 0) {
+            endgame(`babau acabo. pelo menos vc teve ${score} pontos (●'◡'●)`);
+        }
+    })
+}
+
+function initGame() {
+    endgame();
+
+    score = 0;
+    missedClicks = 0;
+    gameTimer = GAME_DURATION;
+    activeBalls = [];
+    gameRunning = true;
+    messageDiv.textContent = '';
+    messageDiv.className = 'message';
+
+    updateGameDisplay();
+    clearCanvas();
+
+    for (let i = 0; i < INITIAL_BALL_COUNT; i++) {
+        generateBall();
+    };
+
+    startTimer();
+    gameLoop();
+
+    console.log("começo. vai. vaia.");
+}
+
+function endgame(msg = "") {
+    gameRunning = false;
+    clearInterval(gameInterval);
+    cancelAnimationFrame(animationFrameId);
+    activeBalls = [];
+    clearCanvas();
+    endSound.currentTime = 0;
+    endSound.play();
+
+    messageDiv.textContent = msg;
+
+    if (msg.includes(`babau acabo. pelo menos vc teve ${score} pontos (●'◡'●)`) && missedClicks < MAX_MISSED_CLICKS) {
+        messageDiv.classList.add('win-message');
+    }
+
+    console.log('ACABOOOOAA. ACABOOOOOO, ACABOOOOOOO!!!!!!')
 }
 
 canvas.addEventListener('click', handleClick);
+restartButton.addEventListener('click', initGame);
 
-for (let i = 0; i < INITIAL_BALL_COUNT; i++) {
-    generateBall();
-}
+initGame();
 
-updatePointsDisplay();
-gameLoop();
-
-console.log("OS SCIRP FUNCIPNOUY YAYAYAYAYAY QAGORA TUDO FUNCIONA AGORA AHAAAA");
-console.log("dica: isso e uma dica muito util")
+console.log("começoux. ex jajax vaix acabax ☆*: .｡. o(≧▽≦)o .｡.:*☆")
