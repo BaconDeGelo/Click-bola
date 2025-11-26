@@ -5,7 +5,8 @@ const timerSpan = document.getElementById('timer');
 const missedClicksSpan = document.getElementById('missedClicks');
 const restartButton = document.getElementById('restart');
 const messageDiv = document.getElementById('winmsg')
-
+const highScoreDisplay = document.getElementById('highScoreDisplay');
+const lastScoresList = document.getElementById('lastScoresList');
 
 const BALL_RADIUS = 25;
 const INITIAL_BALL_COUNT = 3;
@@ -39,6 +40,8 @@ let gameTimer = GAME_DURATION;
 let gameInterval;
 let gameRunning = true;
 let animationFrameId;
+let highScore = 0;
+let lastScores = [];
 
 function getRandomItem(arr) {
     const randomIndex = Math.floor(Math.random() * arr.length);
@@ -70,6 +73,16 @@ function updateGameDisplay() {
     scoreSpan.textContent = score;
     timerSpan.textContent = gameTimer;
     missedClicksSpan.textContent = `${missedClicks} / ${MAX_MISSED_CLICKS}`;
+}
+
+function updateRecordsDisplay() {
+    highScoreDisplay.textContent = highScore;
+    lastScoresList.innerHTML = '';
+    lastScores.forEach((s, index) => {
+        const listItem = document.createElement('li');
+        listItem.textContent = `Jogada ${lastScores.length - index}: ${s} pontos babau babaleira bobada`;
+        lastScoresList.appendChild(listItem);
+    });
 }
 
 function updatePointsDisplay() {
@@ -191,6 +204,7 @@ function initGame() {
 
     updateGameDisplay();
     clearCanvas();
+    updateRecordsDisplay();
 
     for (let i = 0; i < INITIAL_BALL_COUNT; i++) {
         generateBall();
@@ -217,6 +231,12 @@ function endgame(msg = "") {
         messageDiv.classList.add('win-message');
     }
 
+    lastScores.unshift(score);
+    if (lastScores.length > 5) {
+        lastScores.pop();
+    }
+
+    updateRecordsDisplay();
     console.log('ACABOOOOAA. ACABOOOOOO, ACABOOOOOOO!!!!!!')
 }
 
