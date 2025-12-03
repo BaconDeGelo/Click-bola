@@ -11,7 +11,11 @@ body {
 }
 
 .records-section {
-    color: white;
+    background-image: url(Images/bgwonmsg.png);
+    font-family: Arial, Helvetica, sans-serif;
+    color: rgb(255, 255, 255);
+    border-radius: 15px;
+    padding: 10px;
 }
 
 .starterbutton {
@@ -23,7 +27,7 @@ body {
 }
 
 h1 {
-    color: white;
+    color: rgb(0, 0, 0);
     font-family: Arial, Helvetica, sans-serif;
 }
 
